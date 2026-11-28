@@ -1,17 +1,8 @@
 import React, { useState } from "react";
-import { PuzzleRuntime } from "@puzzlekit/core";
-import {
-  PuzzleProvider,
-  usePuzzle,
-  usePuzzleState,
-} from "@puzzlekit/react";
-import {
-  nonogramModule,
-} from "../../../../packages/modules/nonogram/src";
-import type {
-  NonogramState,
-  NonogramConfig,
-} from "../../../../packages/modules/nonogram/src";
+import { PuzzleDefinition, PuzzleRuntime } from "@puzzlekit/core";
+import {PuzzleProvider, usePuzzle, usePuzzleState} from "@puzzlekit/react";
+import { nonogramModule,} from "../../../../packages/modules/nonogram/src";
+import type {NonogramState, NonogramConfig} from "../../../../packages/modules/nonogram/src";
 
 const puzzleConfig: NonogramConfig = {
   rows: 5,
@@ -28,38 +19,53 @@ const puzzleConfig: NonogramConfig = {
   mode: "assisted",
 };
 
+const definition = {
+  id: "demo-nonogram",
+  type: "nonogram",
+  version: "1.0.0",
+  config: puzzleConfig,
+  constraints: [{
+    id: "max-mistakes",
+    config: { max: 3 }
+  }]
+};
+
+const  maxMistakes = definition.constraints[0].config.max;
+
 function createNonogramPuzzle() {
   const runtime = new PuzzleRuntime();
 
   runtime.registerModule(nonogramModule);
-
-  return runtime.create<NonogramState>({
-    definition: {
-      id: "demo-nonogram",
-      type: "nonogram",
-      version: "1.0.0",
-      config: puzzleConfig,
+  runtime.registerConstraint({
+    id: "max-mistakes",
+    description: "Caps number of mistake",
+    target: "state",
+    validate(state: unknown, config?: unknown) {
+      const max = (config as { max?: number })?.max ?? 3;
+      const mistakes = (state as { mistakes: number }).mistakes;
+      return { valid: mistakes <= max, message: `No more than ${max} mistakes allowed. Start over.` };
     },
   });
+
+  return runtime.create<NonogramState>({definition});
 }
 
 function NonogramBoard() {
   const puzzle = usePuzzle<NonogramState>();
   const state = usePuzzleState<NonogramState>();
 
-  const [selectedTool, setSelectedTool] = useState<
-    "filled" | "empty"
-  >("filled");
-
+  const [selectedTool, setSelectedTool] = useState<"filled" | "empty">("filled");
+  
   const completed = puzzle.isComplete();
+
+  const limitReached = state.mistakes >= maxMistakes;
+  const locked = completed || limitReached;
+
 
   function selectCell(index: number) {
     puzzle.dispatch({
       type: "SET_CELL",
-      payload: {
-        index,
-        value: selectedTool,
-      },
+      payload: {index, value: selectedTool},
     });
   }
 
@@ -72,6 +78,11 @@ function NonogramBoard() {
         </div>
 
         <div>
+          <span>Max mistakes</span>
+          <strong>{maxMistakes}</strong>
+        </div>
+
+        <div>
           <span>Status</span>
           <strong>{completed ? "Completed" : "Playing"}</strong>
         </div>
@@ -81,7 +92,7 @@ function NonogramBoard() {
         <button
           className={selectedTool === "filled" ? "active" : ""}
           onClick={() => setSelectedTool("filled")}
-          disabled={completed}
+          disabled={locked}
         >
           Fill cell
         </button>
@@ -89,7 +100,7 @@ function NonogramBoard() {
         <button
           className={selectedTool === "empty" ? "active" : ""}
           onClick={() => setSelectedTool("empty")}
-          disabled={completed}
+          disabled={locked}
         >
           Mark empty
         </button>
@@ -146,6 +157,10 @@ function NonogramBoard() {
           </div>
         ))}
       </div>
+
+      {limitReached && !completed && (<p className="error-message">
+        No more than {maxMistakes} mistakes allowed. Start over.
+      </p>)}
 
       {completed && (
         <p className="completion-message">

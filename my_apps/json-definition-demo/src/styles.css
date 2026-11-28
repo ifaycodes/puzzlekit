@@ -476,6 +476,12 @@ button.tile:hover:not(:disabled) {
   font-weight: 600;
 }
 
+.error-message {
+  text-align: center;
+  margin-top: 24px;
+  font-weight: 600;
+}
+
 .reset-button {
   margin-top: 24px;
   padding: 12px 20px;
