@@ -13,12 +13,11 @@ export class InstanceManager {
     private instances = new Map<string, PuzzleInstance>();
     private instanceModules = new Map<string, PuzzleModule>();
     private definitions = new Map<string, PuzzleDefinition>();
-    readonly constraintRegistry = new  ConstraintRegistry();
-    private constraintEngine = new ConstraintEngine(this.constraintRegistry);
-
+    
     constructor(
         private readonly moduleRegistry: ModuleRegistry,
-        private readonly stateManager: StateManager
+        private readonly stateManager: StateManager,
+        private readonly constraintRegistry = new  ConstraintRegistry(),
     ) {}
 
     create(definition: PuzzleDefinition): PuzzleInstance {

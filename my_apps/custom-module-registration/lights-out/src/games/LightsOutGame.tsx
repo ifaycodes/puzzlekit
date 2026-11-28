@@ -1,10 +1,6 @@
 import React from "react";
 import { PuzzleRuntime } from "@puzzlekit/core";
-import {
-  PuzzleProvider,
-  usePuzzle,
-  usePuzzleState,
-} from "@puzzlekit/react";
+import { PuzzleProvider,  usePuzzle,  usePuzzleState,} from "@puzzlekit/react";
 import { lightsOutModule } from "../module/lights-out.module";
 import type { LightsOutConfig, LightsOutState } from "../module/types";
 

@@ -1,4 +1,3 @@
-
 import type { Constraint } from "../primitives/common/constraints";
 
 export class ConstraintRegistry {

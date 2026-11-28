@@ -1,10 +1,4 @@
-
-import type {
-  PuzzleAction,
-  PuzzleEvent,
-  ActionResult,
-  PuzzleState,
-} from "../types";
+import type {PuzzleAction, PuzzleEvent, ActionResult} from "../types";
 
 import { InstanceManager } from "./instance-manager";
 import { StateManager } from "./state-manager";

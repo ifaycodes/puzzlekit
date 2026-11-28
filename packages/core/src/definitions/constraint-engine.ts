@@ -1,7 +1,4 @@
-import type {
-  ConstraintResult,
-  ConstraintTarget,
-} from "../primitives/common/constraints";
+import type {ConstraintResult, ConstraintTarget } from "../primitives/common/constraints";
 import type { ConstraintReference } from "../types";
 import { ConstraintRegistry } from "./constraint-registry";
 

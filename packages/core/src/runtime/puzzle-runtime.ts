@@ -14,9 +14,9 @@ import { builtInConstraints } from "../definitions/built-in-constraints";
 export class PuzzleRuntime {
   private moduleRegistry = new ModuleRegistry();
   private stateManager = new StateManager();
-  private instanceManager = new InstanceManager(this.moduleRegistry, this.stateManager);
-  private eventManager = new EventManager();
   readonly constraintRegistry = createDefaultConstraintRegistry();
+  private instanceManager = new InstanceManager(this.moduleRegistry, this.stateManager, this.constraintRegistry);
+  private eventManager = new EventManager();
   private constraintEngine = new ConstraintEngine(this.constraintRegistry);
 
   private completionChecker = new CompletionChecker(
