@@ -1,25 +1,24 @@
-
 import { describe, it, expect } from "vitest";
-import { lightsOutModule } from "../src/lights-out.module";
+import { lightsOutModule } from "../src/module";
+
+const config = { size: 3 };
 
 describe("Lights Out Module", () => {
   it("initializes a board", () => {
-    const state = lightsOutModule.initialize({ size: 3 });
+    const state = lightsOutModule.initialize(config);
 
     expect(state.lights).toHaveLength(9);
     expect(state.moves).toBe(0);
   });
 
   it("toggles a cell and its neighbors", () => {
-    const state = lightsOutModule.initialize({
-      size: 3,
-      initialLights: Array(9).fill(false),
-    });
+    const toggleConfig = { size: 3, initialLights: Array(9).fill(false),};
+    const state = lightsOutModule.initialize(toggleConfig);
 
     const result = lightsOutModule.processAction(state, {
       type: "TOGGLE_LIGHT",
       payload: { index: 4 },
-    });
+    }, toggleConfig);
 
     expect(result.accepted).toBe(true);
 
@@ -34,12 +33,12 @@ describe("Lights Out Module", () => {
   });
 
   it("toggles only available neighbors at a corner", () => {
-    const state = lightsOutModule.initialize({ size: 3 });
+    const state = lightsOutModule.initialize(config);
 
     const result = lightsOutModule.processAction(state, {
       type: "TOGGLE_LIGHT",
       payload: { index: 0 },
-    });
+    }, config);
 
     expect(result.accepted).toBe(true);
 
@@ -53,12 +52,12 @@ describe("Lights Out Module", () => {
   });
 
   it("rejects invalid indices", () => {
-    const state = lightsOutModule.initialize({ size: 3 });
+    const state = lightsOutModule.initialize(config);
 
     const result = lightsOutModule.processAction(state, {
       type: "TOGGLE_LIGHT",
       payload: { index: 9 },
-    });
+    }, config);
 
     expect(result.accepted).toBe(false);
   });
@@ -66,17 +65,17 @@ describe("Lights Out Module", () => {
   it("detects completion when all lights are off", () => {
     const state = lightsOutModule.initialize({ size: 3 });
 
-    expect(lightsOutModule.isComplete(state)).toBe(true);
+    expect(lightsOutModule.isComplete(state, config)).toBe(true);
   });
 
   it("does not mutate the original state", () => {
-    const state = lightsOutModule.initialize({ size: 3 });
+    const state = lightsOutModule.initialize(config);
     const originalLights = [...state.lights];
 
     lightsOutModule.processAction(state, {
       type: "TOGGLE_LIGHT",
       payload: { index: 4 },
-    });
+    }, config);
 
     expect(state.lights).toEqual(originalLights);
   });

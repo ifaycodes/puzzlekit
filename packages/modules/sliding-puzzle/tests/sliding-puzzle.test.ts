@@ -21,7 +21,7 @@ describe("Sliding Puzzle Module", () => {
     const result = slidingPuzzleModule.processAction(state, {
       type: "MOVE_TILE",
       payload: { tileIndex: 8 },
-    });
+    }, config);
 
     expect(result.accepted).toBe(true);
 
@@ -37,7 +37,7 @@ describe("Sliding Puzzle Module", () => {
     const result = slidingPuzzleModule.processAction(state, {
       type: "MOVE_TILE",
       payload: { tileIndex: 0 },
-    });
+    }, config);
 
     expect(result.accepted).toBe(false);
   });
@@ -49,7 +49,7 @@ describe("Sliding Puzzle Module", () => {
     slidingPuzzleModule.processAction(state, {
       type: "MOVE_TILE",
       payload: { tileIndex: 8 },
-    });
+    }, config);
 
     expect(state.tiles).toEqual(originalTiles);
   });
@@ -60,10 +60,10 @@ describe("Sliding Puzzle Module", () => {
     const result = slidingPuzzleModule.processAction(state, {
       type: "MOVE_TILE",
       payload: { tileIndex: 8 },
-    });
+    }, config);
 
     expect(
-      result.accepted && slidingPuzzleModule.isComplete(result.state)
+      result.accepted && slidingPuzzleModule.isComplete(result.state, config)
     ).toBe(true);
   });
 });

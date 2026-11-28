@@ -24,7 +24,7 @@ describe("Nonogram Module", () => {
     const result = nonogramModule.processAction(state, {
       type: "SET_CELL",
       payload: { index: 0, value: "filled" },
-    });
+    }, config);
 
     expect(result.accepted).toBe(true);
   });
@@ -35,10 +35,12 @@ describe("Nonogram Module", () => {
       mode: "strict",
     });
 
+    const strict = { ...config, mode: "strict" as const }
+
     const result = nonogramModule.processAction(state, {
       type: "SET_CELL",
       payload: { index: 0, value: "empty" },
-    });
+    }, strict);
 
     expect(result.accepted).toBe(false);
   });
@@ -49,7 +51,7 @@ describe("Nonogram Module", () => {
     const result = nonogramModule.processAction(state, {
       type: "SET_CELL",
       payload: { index: 0, value: "empty" },
-    });
+    }, config);
 
     expect(result.accepted).toBe(true);
 
@@ -67,7 +69,7 @@ describe("Nonogram Module", () => {
     };
 
     expect(
-      nonogramModule.isComplete(incorrectState as typeof state)
+      nonogramModule.isComplete(incorrectState as typeof state, config)
     ).toBe(false);
   });
 
