@@ -1,0 +1,14 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Commit after completed task",
+      "trigger": "PostTaskExec",
+      "description": "After a spec task completes, commit only the files that task changed with a conventional commit message.",
+      "action": {
+        "type": "agent",
+        "prompt": "The task just completed. If this workspace is a git repository (check with `git rev-parse --is-inside-work-tree`), commit the work: run `git status --short`, stage only the files this task changed by name (never `git add -A` or `git add .`), and commit with a Conventional Commits message (feat, fix, docs, test, chore, refactor) that describes what the task did, for example `feat(core): add session serializer`. Do not push. Do not commit .env files, node_modules, dist or coverage. If it is not a git repository or there is nothing to commit, do nothing and say so in one sentence."
+      }
+    }
+  ]
+}
